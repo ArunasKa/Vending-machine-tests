@@ -1,0 +1,106 @@
+article {
+  border: 2px solid black;
+  border-radius: 35%;
+  width: 25%;
+  margin: 10% auto auto;
+  padding: 20px;
+  background-color: rgb(155, 206, 250);
+}
+
+h1 {
+  background-color: rgb(155, 206, 250);
+  width: 50%;
+  padding-left: 10%;
+  margin: auto;
+}
+
+.container {
+  margin: auto;
+  width: 50%;
+  display: grid;
+  gap: 10px;
+  padding: 5% 5%;
+  grid-template-columns: auto auto auto;
+  background-color: rgb(155, 206, 250);
+}
+
+.button,
+.button_cancel,
+.button_description {
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.button:hover,
+.button_cancel:hover,
+.button_description:hover  {
+  background-color: rgb(222, 208, 255);
+}
+
+.container_main {
+  display: grid;
+  gap: 5px;
+  grid-template-columns: auto auto;
+  margin: 0 20% 0 20%;
+  background-color: rgb(155, 206, 250);
+}
+
+.container--form {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto auto;
+  background-color: rgb(155, 206, 250);
+  padding: 10px;
+}
+
+.money {
+  margin: 0 0 0 25%;
+  text-align: center;
+  width: 100%;
+  border: 2px solid black;
+  border-radius: 20%;
+  background-color: rgb(196, 223, 246);
+}
+
+.form_money {
+  margin: 0 0 0 10%;
+  width: 2rem;
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 20%;
+}
+.amount {
+  width: 80%;
+  padding-left: 2rem;
+  padding-right: 1rem;
+  background-color: rgb(155, 206, 250);
+  font-size: 1rem;
+}
+
+.button_cancel {
+  position: relative;
+  left: 65%;
+}
+
+.button_description {
+  position: relative;
+  left: 45%;
+  width: 10%;
+}
+.text {
+  text-align: center;
+  width: 60%;
+  margin: 10px auto auto auto;
+}
+
+@media only screen and (max-width: 1300px) {
+  article {
+    width: 30%;
+  }
+}
+
+@media only screen and (max-width: 1050px) {
+  article {
+    width: 50%;
+  }
+}

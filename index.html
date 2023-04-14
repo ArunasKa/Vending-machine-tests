@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+    <title>Vending machine</title>
+  </head>
+
+  <body>
+    <article>
+      <h1>Vending machine</h1>
+      <div class="container">
+        <button
+          class="button"
+          value="Twix"
+          id="Twix"
+          data-testid="twix"
+          onclick="dispenseProduct(0)"
+        >
+          Twix
+        </button>
+        <button
+          class="button"
+          value="Chocolate"
+          id="Chocolate"
+          data-testid="chocolate"
+          onclick="dispenseProduct(1)"
+        >
+          Chocolate
+        </button>
+        <button
+          class="button"
+          value="Brownie"
+          id="Brownie"
+          data-testid="brownie"
+          onclick="dispenseProduct(2)"
+        >
+          Brownie
+        </button>
+      </div>
+
+      <div class="container_main">
+        <form>
+          <div class="container--form">
+            <span class="money">5</span>
+            <input
+              class="form_money"
+              type="text"
+              name="5"
+              id="5"
+              data-testid="fiveEuro"
+              placeholder="0"
+              value=""
+              oninput="tally()"
+            />
+
+            <span class="money">2</span>
+            <input
+              class="form_money"
+              type="text"
+              name="2"
+              id="2"
+              data-testid="twoEuro"
+              placeholder="0"
+              value=""
+              oninput="tally()"
+            />
+
+            <span class="money">1</span>
+            <input
+              class="form_money"
+              type="text"
+              name="1"
+              id="1"
+              data-testid="oneEuro"
+              placeholder="0"
+              value=""
+              oninput="tally()"
+            />
+
+            <span class="money">0.10</span>
+            <input
+              class="form_money"
+              type="text"
+              name="0.1"
+              id="0.1"
+              data-testid="tenCents"
+              placeholder="0"
+              value=""
+              oninput="tally()"
+            />
+          </div>
+        </form>
+        <div class="amount">
+          <h3>Total Amount: €<span id="Total">0.00</span></h3>
+          <h4 id="message" data-testid="message">
+            Insert money first for the food you wanna get
+          </h4>
+        </div>
+      </div>
+      <button
+        class="button_cancel"
+        value="cancel"
+        id="cancel"
+        onclick="cancel()"
+      >
+        Cancel
+      </button>
+
+      <script src="index.js"></script>
+    </article>
+  </body>
+  <footer>
+    <input
+      class="button_description"
+      type="button"
+      id="button"
+      value="Description"
+      onclick="description()"
+    />
+    <p class="text" id="description"></p>
+  </footer>
+</html>
