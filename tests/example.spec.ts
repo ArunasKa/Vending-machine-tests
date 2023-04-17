@@ -3,7 +3,7 @@ import { test, expect, Page } from "@playwright/test";
 test.beforeEach(async ({ page }) => {
   await page.goto("http://127.0.0.1:5500/index.html");
 });
-const testString = '21';
+const testString = '210';
 const testValue = parseInt(testString);
 const DescriptionText = "A vending machine sells candies for €2 each. You can insert money in coins in various denominations (for example 2 x 3 + 1 x 5 + 0.10 x2 = 11.20). When a candy is requested and the machine has the required amount of money, you can purchase it. When the required amount is too much - it gives change. If it is too little - you can not buy your selected candy. Also, if you cancel your order it gives all the money inserted back.";
 
@@ -13,18 +13,12 @@ test.describe("General tests for functionality", () => {
     await page.getByTestId("twoEuro").fill(testString);
     await page.getByTestId("oneEuro").fill(testString);
     await page.getByTestId("tenCents").fill(testString);
-    if(testValue% 10)
-    {
-      await expect(page.locator("#Total")).toHaveText(`${testValue*5+testValue*2+testValue*1+testValue*0.1}0`);  
-    }
-    else{
-      await expect(page.locator("#Total")).toHaveText(`${testValue*5+testValue*2+testValue*1+testValue*0.1}.00`);    
-    }
+    await expect(page.locator("#Total")).toHaveText((testValue*5+testValue*2+testValue*1+testValue*0.1).toFixed(2));
   });
   //Cancel does not work
   test("Add 5eur and cancel to get money back", async ({ page }) => {
     await page.getByTestId("fiveEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*5}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*5).toFixed(2));
     await page.getByRole('button', { name: 'Cancel' }).click();
     await expect(page.locator("#Total")).toHaveText("0");
     await expect(page.locator("#message")).toHaveText(
@@ -43,10 +37,10 @@ test.describe("Test for buying first product (Twix) with different amounts inser
     page,
   }) => {
     await page.getByTestId("fiveEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*5}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*5).toFixed(2));
     await page.getByTestId("twix").click();
     await expect(page.locator("#message")).toHaveText(
-      `Twix has been bought. €${testValue*5-2}.00 returned.`
+      `Twix has been bought. €${(testValue*5-2).toFixed(2)} returned.`
     );
     await expect(page.locator("#Total")).toHaveText("0");
   });
@@ -55,10 +49,10 @@ test.describe("Test for buying first product (Twix) with different amounts inser
     page,
   }) => {
     await page.getByTestId("twoEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*2}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*2).toFixed(2));
     await page.getByTestId("twix").click();
     await expect(page.locator("#message")).toHaveText(
-      `Twix has been bought. €${parseInt(testString)*2-2}.00 returned.`
+      `Twix has been bought. €${(parseInt(testString)*2-2).toFixed(2)} returned.`
     );
     await expect(page.locator("#Total")).toHaveText("0");
   });
@@ -67,18 +61,19 @@ test.describe("Test for buying first product (Twix) with different amounts inser
     page,
   }) => {
     await page.getByTestId("oneEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*1}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*1).toFixed(2));
     await page.getByTestId("twix").click();
+    
     if(testValue*1<2)
     {
       await expect(page.locator("#message")).toHaveText(
-        `You have not paid enough. €${testValue*1}.00 has been returned.`
+        `You have not paid enough. €${(testValue*1).toFixed(2)} has been returned.`
       );
-      await expect(page.locator("#Total")).toHaveText(`${testValue*1}.00`);
+      await expect(page.locator("#Total")).toHaveText((testValue*1).toFixed(2));
     }
     else{
       await expect(page.locator("#message")).toHaveText(
-        `Twix has been bought. €${testValue*1-2}.00 returned.`
+        `Twix has been bought. €${(testValue*1-2).toFixed(2)} returned.`
       );
     }
     
@@ -89,18 +84,18 @@ test.describe("Test for buying first product (Twix) with different amounts inser
     page,
   }) => {
     await page.getByTestId("tenCents").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${(testValue*0.1).toFixed(1)}0`);
+    await expect(page.locator("#Total")).toHaveText((testValue*0.1).toFixed(2));
     await page.getByTestId("twix").click();
     if(testValue*0.1<2)
     {
       await expect(page.locator("#message")).toHaveText(
-        `You have not paid enough. €${(testValue*0.1).toFixed(1)}0 has been returned.`
+        `You have not paid enough. €${(testValue*0.1).toFixed(2)} has been returned.`
       );
-      await expect(page.locator("#Total")).toHaveText(`${testValue*1}0`);
+      await expect(page.locator("#Total")).toHaveText(`${(testValue*1).toFixed(2)}`);
     }
     else{
       await expect(page.locator("#message")).toHaveText(
-        `Twix has been bought. €${(testValue*0.1-2).toFixed(1)}0 returned.`
+        `Twix has been bought. €${(testValue*0.1-2).toFixed(2)} returned.`
       );
     }
     
@@ -112,21 +107,13 @@ test.describe("Test for buying first product (Twix) with different amounts inser
     await page.getByTestId("twoEuro").fill(testString);
     await page.getByTestId("oneEuro").fill(testString);
     await page.getByTestId("tenCents").fill(testString);
-    if(testValue%10)
-    {
-      await expect(page.locator("#Total")).toHaveText(`${testValue*5+testValue*2+testValue*1+testValue*0.1}0`);
+   
+      await expect(page.locator("#Total")).toHaveText((testValue*5+testValue*2+testValue*1+testValue*0.1).toFixed(2));
       await page.getByTestId("twix").click();
       await expect(page.locator("#message")).toHaveText(
-        `Twix has been bought. €${testValue*5+testValue*2+testValue*1+testValue*0.1-2}0 returned.`
+        `Twix has been bought. €${(testValue*5+testValue*2+testValue*1+testValue*0.1-2).toFixed(2)} returned.`
       );
-    }
-    else{
-      await expect(page.locator("#Total")).toHaveText(`${testValue*5+testValue*2+testValue*1+testValue*0.1}.00`);
-      await page.getByTestId("twix").click();
-      await expect(page.locator("#message")).toHaveText(
-        `Twix has been bought. €${testValue*5+testValue*2+testValue*1+testValue*0.1-2}.00 returned.`
-      );
-    }
+    
     
     await expect(page.locator("#Total")).toHaveText("0");
   });
@@ -136,10 +123,10 @@ test.describe("Test for buying first product (Chocolate) with different amounts 
     page,
   }) => {
     await page.getByTestId("fiveEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*5}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*5).toFixed(2));
     await page.getByTestId("chocolate").click();
     await expect(page.locator("#message")).toHaveText(
-      `Chocolate has been bought. €${testValue*5-2}.00 returned.`
+      `Chocolate has been bought. €${(testValue*5-2).toFixed(2)} returned.`
     );
     await expect(page.locator("#Total")).toHaveText("0");
   });
@@ -148,10 +135,10 @@ test.describe("Test for buying first product (Chocolate) with different amounts 
     page,
   }) => {
     await page.getByTestId("twoEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*2}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*2).toFixed(2));
     await page.getByTestId("chocolate").click();
     await expect(page.locator("#message")).toHaveText(
-      `Chocolate has been bought. €${parseInt(testString)*2-2}.00 returned.`
+      `Chocolate has been bought. €${(parseInt(testString)*2-2).toFixed(2)} returned.`
     );
     await expect(page.locator("#Total")).toHaveText("0");
   });
@@ -160,18 +147,18 @@ test.describe("Test for buying first product (Chocolate) with different amounts 
     page,
   }) => {
     await page.getByTestId("oneEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*1}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*1).toFixed(2));
     await page.getByTestId("chocolate").click();
     if(testValue*1<2)
     {
       await expect(page.locator("#message")).toHaveText(
-        `You have not paid enough. €${testValue*1}.00 has been returned.`
+        `You have not paid enough. €${(testValue*1).toFixed(2)} has been returned.`
       );
-      await expect(page.locator("#Total")).toHaveText(`${testValue*1}.00`);
+      await expect(page.locator("#Total")).toHaveText(`${(testValue*1).toFixed(2)}`);
     }
     else{
       await expect(page.locator("#message")).toHaveText(
-        `Chocolate has been bought. €${testValue*1-2}.00 returned.`
+        `Chocolate has been bought. €${(testValue*1-2).toFixed(2)} returned.`
       );
     }
     
@@ -182,18 +169,18 @@ test.describe("Test for buying first product (Chocolate) with different amounts 
     page,
   }) => {
     await page.getByTestId("tenCents").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${(testValue*0.1).toFixed(1)}0`);
+    await expect(page.locator("#Total")).toHaveText((testValue*0.1).toFixed(2));
     await page.getByTestId("chocolate").click();
     if(testValue*0.1<2)
     {
       await expect(page.locator("#message")).toHaveText(
-        `You have not paid enough. €${(testValue*0.1).toFixed(1)}0 has been returned.`
+        `You have not paid enough. €${(testValue*0.1).toFixed(2)} has been returned.`
       );
-      await expect(page.locator("#Total")).toHaveText(`${testValue*1}0`);
+      await expect(page.locator("#Total")).toHaveText(`${(testValue*1).toFixed(2)}`);
     }
     else{
       await expect(page.locator("#message")).toHaveText(
-        `Chocolate has been bought. €${(testValue*0.1-2).toFixed(1)}0 returned.`
+        `Chocolate has been bought. €${(testValue*0.1-2).toFixed(2)} returned.`
       );
     }
     
@@ -205,20 +192,13 @@ test.describe("Test for buying first product (Chocolate) with different amounts 
     await page.getByTestId("twoEuro").fill(testString);
     await page.getByTestId("oneEuro").fill(testString);
     await page.getByTestId("tenCents").fill(testString);
-    if(testValue%10){
-      await expect(page.locator("#Total")).toHaveText(`${testValue*5+testValue*2+testValue*1+testValue*0.1}0`);
+    
+      await expect(page.locator("#Total")).toHaveText((testValue*5+testValue*2+testValue*1+testValue*0.1).toFixed(2));
       await page.getByTestId("chocolate").click();
       await expect(page.locator("#message")).toHaveText(
-        `Chocolate has been bought. €${testValue*5+testValue*2+testValue*1+testValue*0.1-2}0 returned.`
+        `Chocolate has been bought. €${(testValue*5+testValue*2+testValue*1+testValue*0.1-2).toFixed(2)} returned.`
       );
-    }
-    else{
-      await expect(page.locator("#Total")).toHaveText(`${testValue*5+testValue*2+testValue*1+testValue*0.1}.00`);
-      await page.getByTestId("chocolate").click();
-      await expect(page.locator("#message")).toHaveText(
-        `Chocolate has been bought. €${testValue*5+testValue*2+testValue*1+testValue*0.1-2}.00 returned.`
-      );
-    }
+    
     
     await expect(page.locator("#Total")).toHaveText("0");
   });
@@ -228,10 +208,10 @@ test.describe("Test for buying first product (Brownie) with different amounts in
     page,
   }) => {
     await page.getByTestId("fiveEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*5}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*5).toFixed(2));
     await page.getByTestId("brownie").click();
     await expect(page.locator("#message")).toHaveText(
-      `Brownie has been bought. €${testValue*5-2}.00 returned.`
+      `Brownie has been bought. €${(testValue*5-2).toFixed(2)} returned.`
     );
     await expect(page.locator("#Total")).toHaveText("0");
   });
@@ -240,10 +220,10 @@ test.describe("Test for buying first product (Brownie) with different amounts in
     page,
   }) => {
     await page.getByTestId("twoEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*2}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*2).toFixed(2));
     await page.getByTestId("brownie").click();
     await expect(page.locator("#message")).toHaveText(
-      `Brownie has been bought. €${parseInt(testString)*2-2}.00 returned.`
+      `Brownie has been bought. €${(parseInt(testString)*2-2).toFixed(2)} returned.`
     );
     await expect(page.locator("#Total")).toHaveText("0");
   });
@@ -252,18 +232,18 @@ test.describe("Test for buying first product (Brownie) with different amounts in
     page,
   }) => {
     await page.getByTestId("oneEuro").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${testValue*1}.00`);
+    await expect(page.locator("#Total")).toHaveText((testValue*1).toFixed(2));
     await page.getByTestId("brownie").click();
     if(testValue*1<2)
     {
       await expect(page.locator("#message")).toHaveText(
-        `You have not paid enough. €${testValue*1}.00 has been returned.`
+        `You have not paid enough. €${(testValue*1).toFixed(2)} has been returned.`
       );
-      await expect(page.locator("#Total")).toHaveText(`${testValue*1}.00`);
+      await expect(page.locator("#Total")).toHaveText(`${(testValue*1).toFixed(2)}`);
     }
     else{
       await expect(page.locator("#message")).toHaveText(
-        `Brownie has been bought. €${testValue*1-2}.00 returned.`
+        `Brownie has been bought. €${(testValue*1-2).toFixed(2)} returned.`
       );
     }
     
@@ -274,18 +254,18 @@ test.describe("Test for buying first product (Brownie) with different amounts in
     page,
   }) => {
     await page.getByTestId("tenCents").fill(testString);
-    await expect(page.locator("#Total")).toHaveText(`${(testValue*0.1).toFixed(1)}0`);
+    await expect(page.locator("#Total")).toHaveText((testValue*0.1).toFixed(2));
     await page.getByTestId("brownie").click();
     if(testValue*0.1<2)
     {
       await expect(page.locator("#message")).toHaveText(
-        `You have not paid enough. €${(testValue*0.1).toFixed(1)}0 has been returned.`
+        `You have not paid enough. €${(testValue*0.1).toFixed(2)}0 has been returned.`
       );
-      await expect(page.locator("#Total")).toHaveText(`${testValue*1}0`);
+      await expect(page.locator("#Total")).toHaveText(`${(testValue*1).toFixed(2)}`);
     }
     else{
       await expect(page.locator("#message")).toHaveText(
-        `Brownie has been bought. €${(testValue*0.1-2).toFixed(1)}0 returned.`
+        `Brownie has been bought. €${(testValue*0.1-2).toFixed(2)} returned.`
       );
     }
     
@@ -297,21 +277,13 @@ test.describe("Test for buying first product (Brownie) with different amounts in
     await page.getByTestId("twoEuro").fill(testString);
     await page.getByTestId("oneEuro").fill(testString);
     await page.getByTestId("tenCents").fill(testString);
-    if(testValue%10)
-    {
-      await expect(page.locator("#Total")).toHaveText(`${testValue*5+testValue*2+testValue*1+testValue*0.1}0`);
+    
+      await expect(page.locator("#Total")).toHaveText((testValue*5+testValue*2+testValue*1+testValue*0.1).toFixed(2));
       await page.getByTestId("brownie").click();
       await expect(page.locator("#message")).toHaveText(
-        `Brownie has been bought. €${testValue*5+testValue*2+testValue*1+testValue*0.1-2}0 returned.`
+        `Brownie has been bought. €${(testValue*5+testValue*2+testValue*1+testValue*0.1-2).toFixed(2)} returned.`
       );
-    }
-    else{
-      await expect(page.locator("#Total")).toHaveText(`${testValue*5+testValue*2+testValue*1+testValue*0.1}.00`);
-    await page.getByTestId("brownie").click();
-    await expect(page.locator("#message")).toHaveText(
-      `Brownie has been bought. €${testValue*5+testValue*2+testValue*1+testValue*0.1-2}.00 returned.`
-    );
-    }
+    
     
     await expect(page.locator("#Total")).toHaveText("0");
   });
